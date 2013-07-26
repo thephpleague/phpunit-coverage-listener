@@ -60,6 +60,18 @@ And thats it.
 Advance Usage
 -------------
 
+As you noticed on previous section, in order to work properly Listener class need to know several things, they are : 
+
+| Key Name | Value | Description
+| :---: | :---: | :---: |
+| `printer` | `League\PHPUnitCoverageListener\PrinterInterface` | Required |
+| `hook` | `League\PHPUnitCoverageListener\HookInterface` | Optional |
+| `namespace` | `String` | Optional |
+| `repo_token` | `String` | Required |
+| `target_url` | `String` | Required |
+| `coverage_dir` | `String` | Required |
+
+
 Changelog
 ---------
 
