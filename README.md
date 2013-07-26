@@ -63,7 +63,7 @@ Advance Usage
 
 As you may noticed on previous section, in order to work properly, Listener class need to know several things. They are being passed from your phpunit configuration within listener arguments directive.
 
-Bellow table describe each configuration respectively : 
+Bellow table describe each configuration options respectively : 
 
 | Key Name | Value | Description
 | :---: | :---: | :---: |
@@ -74,6 +74,12 @@ Bellow table describe each configuration respectively :
 | `target_url` | `String` | Required |
 | `coverage_dir` | `String` | Required |
 
+### printer
+
+This option contains `PrinterInterface` that will be used by Listener class in several points. In previous section, we set it to use `StdOut` printer that will print out any output informations directly into standard output. You could use your own printer class as long as it implements required interface.
+
+
+This 
 
 Changelog
 ---------
