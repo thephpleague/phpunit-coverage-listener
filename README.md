@@ -2,7 +2,23 @@ PHPUnit Coverage Listener
 =========================
 [![Build Status](https://travis-ci.org/php-loep/phpunit-coverage-listener.png)](https://travis-ci.org/php-loep/phpunit-coverage-listener) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/11688670)](http://depending.in/php-loep/phpunit-coverage-listener) [![Coverage Status](https://coveralls.io/repos/php-loep/phpunit-coverage-listener/badge.png?branch=master)](https://coveralls.io/r/php-loep/phpunit-coverage-listener?branch=master)
 
-PHPUnit Coverage Listener is a utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL. It could be used, for example, to effortlessly send the payload data for [Coveralls](https://coveralls.io/) from your composer-based project Continuous-Integration server.
+PHPUnit Coverage Listener is a utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL.
+
+The main goal of the PHPunit Coverage Listener package is to provide a mechanism that generate a payload data (from PHPUnit code-coverage information), with bellow format (simplified) :
+
+    {
+      "repo_token": "s3cr3th4sh",
+      "source_files": [
+        {
+          "name": "Resource.php",
+          "source": "<?php \n  echo 'Hello World'\n", // Source code contains 2 lines
+          "coverage": [null, 2]                       // Coverage show that line 1 is covered
+        },
+        //... other source information
+      ]
+    }
+
+and then send these payload data into some remote location to be processing further, that could be used to provide usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario. But this package have several flexibilities that enable you to use it in a way that fit with your specific need (not limited to one service like Coveralls).
 
 Requirement
 -----------
