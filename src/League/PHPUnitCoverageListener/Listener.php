@@ -2,6 +2,7 @@
 
 use League\PHPUnitCoverageListener\ListenerInterface;
 use League\PHPUnitCoverageListener\PrinterInterface;
+use League\PHPUnitCoverageListener\HookInterface;
 use League\PHPUnitCoverageListener\Collection;
 use \SimpleXMLElement;
 
@@ -18,6 +19,11 @@ class Listener implements ListenerInterface
 	 * @var PrinterInterface
 	 */
 	protected $printer;
+
+	/**
+	 * @var HookInterface
+	 */
+	protected $hook;
 
     /**
      * Listener constructor
@@ -75,6 +81,12 @@ class Listener implements ListenerInterface
             && array_key_exists('namespace', $args)) {
             extract($args);
 
+            // Check for exist and valid hook
+            if (isset($hook) && $hook instanceof HookInterface) {
+            	$this->hook = $hook;
+            	unset($hook);
+            }
+
             // Get the realpath coverage directory
             $coverage_dir = realpath($coverage_dir);
             $coverage_file = $coverage_dir.DIRECTORY_SEPARATOR.self::COVERAGE_FILE;
@@ -82,59 +94,12 @@ class Listener implements ListenerInterface
 
             // Get the coverage information
             if (is_dir($coverage_dir) && is_file($coverage_file)) {
+            	// Build the coverage xml object
+		        $xml = file_get_contents($coverage_file);
+		        $coverage = new SimpleXMLElement($xml);
+
                 // Prepare the coveralls payload
-                $data = new Collection(array(
-                    'repo_token' => $repo_token,
-                    'source_files' => array(),
-                ));
-
-                // Check for Travis-CI environment
-                // if it appears, then assign it respectively
-                if (getenv('TRAVIS_JOB_ID')) {
-                	// Remove repo token
-                	$data->remove('repo_token');
-
-                	// And use travis config
-                	$data->set('service_name', 'travis-ci');
-                	$data->set('service_job_id', getenv('TRAVIS_JOB_ID'));
-                }
-
-                // Prepare temporary source_files holder
-                $sourceArray = new Collection();
-
-                // Build the coverage xml object
-                $xml = file_get_contents($coverage_file);
-                $coverage = new SimpleXMLElement($xml);
-
-                if (count($coverage->project->package) > 0) {
-                    // Iterate over the package
-                    foreach ($coverage->project->package as $package) {
-                        // Then itterate on each package file
-                        foreach ($package->file as $packageFile) {
-                            $this->printer->printOut('Checking:'.$packageFile['name']);
-
-                            $sourceArray->add(array(
-                                md5($packageFile['name']) => $this->collect($packageFile, $namespace)
-                            ));
-                        }
-                    }
-                }
-
-                if (count($coverage->project->file) > 0) {
-                    // itterate over the files
-                    foreach ($coverage->project->file as $file) {
-                        $this->printer->printOut('Checking:'.$file['name']);
-
-                        $sourceArray->add(array(
-                            md5($file['name']) => $this->collect($file, $namespace)
-                        ));
-                    }
-                }
-
-                // Last, pass the source information it it contains any information
-                if ($sourceArray->count() > 0) {
-                    $data->set('source_files', array_values($sourceArray->all()));
-                }
+                $data = $this->collect($coverage, $args);
 
                 // Write the coverage output
                 $this->printer->out('Writing coverage output...');
@@ -164,13 +129,75 @@ class Listener implements ListenerInterface
     }
 
     /**
+     * Main collector method
+     *
+     * @param SimpleXMLElement Coverage report from PHPUnit
+     * @param array
+     * @return Collection
+     */
+    public function collect(SimpleXMLElement $coverage, $args = array())
+    {
+    	extract($args);
+
+    	$data = new Collection(array(
+            'repo_token' => $repo_token,
+            'source_files' => array(),
+        ));
+
+ 		// Before collect hook
+     	if ( ! empty($this->hook)) {
+     		$data = $this->hook->beforeCollect($data);
+     	}
+
+        // Prepare temporary source_files holder
+        $sourceArray = new Collection();
+
+        if (count($coverage->project->package) > 0) {
+            // Iterate over the package
+            foreach ($coverage->project->package as $package) {
+                // Then itterate on each package file
+                foreach ($package->file as $packageFile) {
+                    $this->printer->printOut('Checking:'.$packageFile['name']);
+
+                    $sourceArray->add(array(
+                        md5($packageFile['name']) => $this->collectFromFile($packageFile, $namespace)
+                    ));
+                }
+            }
+        }
+
+        if (count($coverage->project->file) > 0) {
+            // itterate over the files
+            foreach ($coverage->project->file as $file) {
+                $this->printer->printOut('Checking:'.$file['name']);
+
+                $sourceArray->add(array(
+                    md5($file['name']) => $this->collectFromFile($file, $namespace)
+                ));
+            }
+        }
+
+        // Last, pass the source information it it contains any information
+        if ($sourceArray->count() > 0) {
+            $data->set('source_files', array_values($sourceArray->all()));
+        }
+
+ 		// After collect hook
+        if ( ! empty($this->hook)) {
+     		$data = $this->hook->afterCollect($data);
+     	}
+
+     	return $data;
+    }
+
+    /**
      * Collect code-coverage information from a file
      *
      * @param SimpleXMLElement contains coverage information
      * @param string Optional file namespace identifier
      * @return array contains code-coverage data with keys as follow : name, source, coverage
      */
-    public function collect(SimpleXMLElement $file, $namespace = '')
+    public function collectFromFile(SimpleXMLElement $file, $namespace = '')
     {
         // Get current dir
         $currentDir = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
