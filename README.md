@@ -103,7 +103,7 @@ You could register your own hook class that suit for your need as long as it imp
 
 ### namespace
 
-Option `namespace` string could be passed into the Listener, so that the generated coverage information use "relative" name instead literal file path. For example, if your source is `src/My/Package/Resource.php`, and you passing `My/Package` as namespace option, generated file name will be `My/Package/Resource.php`.
+Option `namespace` string could be passed into the Listener, so that the generated coverage information use "relative" name instead literal file path. For example, if your source is `src/My/Package/Resource.php`, and you passing `My\Package` as namespace option, generated file name within coverage payload data will be `My/Package/Resource.php`.
 
 ### repo_token
 
