@@ -20,6 +20,7 @@ Requirement
 * PHP >= 5.3.3
 * PHPUnit
 * PHPUnit Code Coverage
+* cURL
 
 Usage
 -----
