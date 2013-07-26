@@ -232,9 +232,10 @@ class Listener implements ListenerInterface
         } else {
             // Replace backslash with directory separator
             $ns = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
-            list($path, $namespacedName) = explode($ns, $relativeName);
+            $nsComponents = explode($ns, $relativeName);
+            $namespacedName = count($nsComponents) == 2 ? $nsComponents[1] : current($nsComponents);
 
-            $name = $ns.DIRECTORY_SEPARATOR.trim($namespacedName, DIRECTORY_SEPARATOR);
+            $name = count($nsComponents) == 2 ? $ns.DIRECTORY_SEPARATOR.trim($namespacedName, DIRECTORY_SEPARATOR) : $namespacedName;
         }
 
         // #2 Build coverage data and the source code
