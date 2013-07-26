@@ -20,8 +20,45 @@ Requirement
 
 * PHP >= 5.3.3
 
-Usage
------
+Basic Usage
+-----------
+
+Let's say you want to send a payload data to [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need is adding bellow section within your phpunit configuration :
+	
+	<logging>
+        <log type="coverage-clover" target="/tmp/coverage.xml"/>
+    </logging>
+    <listeners>
+        <listener class="League\PHPUnitCoverageListener\Listener">
+            <arguments>
+                <array>
+                    <element key="printer">
+                      <object class="League\PHPUnitCoverageListener\Printer\StdOut"/>
+                    </element>
+                    <element key="hook">
+                      <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
+                    </element>
+                    <element key="namespace">
+                        <string>League\PHPUnitCoverageListener</string>
+                    </element>
+                    <element key="repo_token">
+                        <string>YourCoverallsRepoToken</string>
+                    </element>
+                    <element key="target_url">
+                        <string>https://coveralls.io/api/v1/jobs</string>
+                    </element>
+                    <element key="coverage_dir">
+                        <string>/tmp</string>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
+
+And thats it.
+
+Advance Usage
+-------------
 
 Changelog
 ---------
