@@ -4,6 +4,7 @@ use League\PHPUnitCoverageListener\ListenerInterface;
 use League\PHPUnitCoverageListener\PrinterInterface;
 use League\PHPUnitCoverageListener\Listener;
 use League\PHPUnitCoverageListener\Printer\ArrayOut;
+use League\PHPUnitCoverageListener\Hook\Travis;
 use League\PHPUnitCoverageListener\Tests\Mocks\MockHook;
 use \PHPUnit_Framework_TestCase;
 
@@ -47,7 +48,7 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 
 		// Use League\PHPUnitCoverageListener coveralls informations
 		$listener->collectAndSendCoverage(array(
-			'hook' => new MockHook(),
+			'hook' => !getenv('TRAVIS_JOB_ID') ? new MockHook() : new Travis(),
 			'namespace' => 'League\PHPUnitCoverageListener',
 			'repo_token' => 'XKUga6etuxSWYPXJ0lAiDyHM2jbKPQAKC',
 			'target_url' => 'https://coveralls.io/api/v1/jobs',
