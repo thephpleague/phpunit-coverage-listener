@@ -136,6 +136,8 @@ The directory you specified here **must** be the same directory from which PHPUn
 Changelog
 ---------
 
+[See the changelog file](https://github.com/php-loep/phpunit-coverage-listener/blob/master/CHANGELOG.md)
+
 Contributing
 ------------
 
