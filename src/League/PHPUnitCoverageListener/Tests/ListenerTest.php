@@ -35,5 +35,6 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('League\PHPUnitCoverageListener\ListenerInterface', $listener);
 		$this->assertObjectHasAttribute('printer', $listener);
+		$this->assertInstanceOf('League\PHPUnitCoverageListener\PrinterInterface', $listener->getPrinter());
 	}
 }
