@@ -21,6 +21,9 @@
                     <element key="printer">
                       <object class="League\PHPUnitCoverageListener\Printer\StdOut"/>
                     </element>
+                    <element key="hook">
+                      <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
+                    </element>
                     <element key="namespace">
                         <string>League\PHPUnitCoverageListener</string>
                     </element>
