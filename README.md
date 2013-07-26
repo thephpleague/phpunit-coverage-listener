@@ -31,6 +31,8 @@ Changelog
 Contributing
 ------------
 
+Please see [CONTRIBUTING](https://github.com/php-loep/phpunit-coverage-listener/blob/master/CONTRIBUTING.md) for details.
+
 Support
 -------
 
