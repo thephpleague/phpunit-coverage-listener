@@ -12,7 +12,7 @@ The main goal of the PHPunit Coverage Listener package is to provide a mechanism
         {
           "name": "Resource.php",
           "source": "<?php \n  echo 'Hello World'\n", // Source code contains 2 lines
-          "coverage": [null, 2]                       // Coverage show that line 1 is covered
+          "coverage": [null, 2]                       // Coverage information on each lines
         },
         //... other source information
       ]
