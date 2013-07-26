@@ -19,8 +19,7 @@ Requirement
 
 * PHP >= 5.3.3
 * PHPUnit
-* PHPUnit Code Coverage
-* cURL
+* xDebug (inherit from PHPUnit Code-Coverage requirement)
 
 Usage
 -----
