@@ -42,13 +42,17 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 
 	public function testCollectAndSendCoverage()
 	{
+		if (!getenv('TRAVIS_JOB_ID')) {
+			$this->markTestSkipped('This test was intended to run within Travis environment');
+		}
+
 		$listener = new Listener(array(
 			'printer' => new ArrayOut
 		), false);
 
 		// Use League\PHPUnitCoverageListener coveralls informations
 		$listener->collectAndSendCoverage(array(
-			'hook' => !getenv('TRAVIS_JOB_ID') ? new MockHook() : new Travis(),
+			'hook' => new Travis(),
 			'namespace' => 'League\PHPUnitCoverageListener',
 			'repo_token' => 'XKUga6etuxSWYPXJ0lAiDyHM2jbKPQAKC',
 			'target_url' => 'https://coveralls.io/api/v1/jobs',
