@@ -219,7 +219,8 @@ class Listener implements ListenerInterface
         $coverage = array();
 
         // #1 Get the relative file name
-        list($path, $relativeName) = explode($currentDir, $file['name']);
+        $pathComponents = explode($currentDir, $file['name']);
+        $relativeName = count($pathComponents) == 2 ? $pathComponents[1] : current($pathComponents);
 
         if (empty($namespace)) {
             $name = trim($relativeName, DIRECTORY_SEPARATOR);
