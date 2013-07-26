@@ -238,21 +238,21 @@ class Listener implements ListenerInterface
             $name = count($nsComponents) == 2 ? $ns.DIRECTORY_SEPARATOR.trim($namespacedName, DIRECTORY_SEPARATOR) : $namespacedName;
         }
 
-        // #2 Build coverage data and the source code
-        $count = 0;
-        $handle = fopen($file['name'], "r");
-        while(!feof($handle)){
-            $source .= fgets($handle);
-            $count++;
-        }
-
-        fclose($handle);
-
-        // Here we build the default coverage values
-        $coverage = array_fill(0, $count, null);
-
         // Then, we will overwrite any coverage block into it!
-        if (count($file->line) > 0) {
+        if (count($file->line) > 1) {
+            // #2 Build coverage data and the source code
+            $count = 0;
+            $handle = fopen($file['name'], "r");
+            while(!feof($handle)){
+                $source .= fgets($handle);
+                $count++;
+            }
+
+            fclose($handle);
+
+            // Here we build the default coverage values
+            $coverage = array_fill(0, $count, null);
+
             foreach ($file->line as $line) {
                 $attributes = current($line->attributes());
 
