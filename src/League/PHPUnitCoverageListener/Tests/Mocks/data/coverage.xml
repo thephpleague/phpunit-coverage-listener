@@ -2,7 +2,7 @@
 <coverage generated="1374862677">
   <project timestamp="1374862677">
     <package name="League\PHPUnitCoverageListener">
-      <file name="/home/travis/build/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Collection.php">
+      <file name="/home/travis/build/php-loep/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Collection.php">
         <class name="Collection" namespace="League\PHPUnitCoverageListener">
           <metrics methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="20" coveredelements="20"/>
         </class>
@@ -29,7 +29,7 @@
         <line num="107" type="stmt" count="1"/>
         <metrics loc="106" ncloc="50" classes="1" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="20" coveredelements="20"/>
       </file>
-      <file name="/home/travis/build/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Listener.php">
+      <file name="/home/travis/build/php-loep/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Listener.php">
         <class name="Listener" namespace="League\PHPUnitCoverageListener">
           <metrics methods="6" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="117" coveredstatements="8" elements="123" coveredelements="10"/>
         </class>
@@ -157,7 +157,7 @@
       </file>
     </package>
     <package name="League\PHPUnitCoverageListener\Hook">
-      <file name="/home/travis/build/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Hook/Travis.php">
+      <file name="/home/travis/build/php-loep/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Hook/Travis.php">
         <class name="Travis" namespace="League\PHPUnitCoverageListener\Hook">
           <metrics methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="9" coveredelements="0"/>
         </class>
@@ -174,7 +174,7 @@
       </file>
     </package>
     <package name="League\PHPUnitCoverageListener\Printer">
-      <file name="/home/travis/build/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Printer/ArrayOut.php">
+      <file name="/home/travis/build/php-loep/phpunit-coverage-listener/src/League/PHPUnitCoverageListener/Printer/ArrayOut.php">
         <class name="ArrayOut" namespace="League\PHPUnitCoverageListener\Printer">
           <metrics methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="0" elements="6" coveredelements="0"/>
         </class>
