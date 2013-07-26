@@ -60,7 +60,7 @@ And thats it.
 Advance Usage
 -------------
 
-As you may noticed on previous section, in order to work properly, Listener class need to know several things. They are being passed from `phpunit.xml` file.
+As you may noticed on previous section, in order to work properly, Listener class need to know several things. They are being passed from your phpunit configuration within listener arguments directive.
 
 Bellow table describe each configuration respectively : 
 
