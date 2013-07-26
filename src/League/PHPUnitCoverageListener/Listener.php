@@ -73,7 +73,7 @@ class Listener implements ListenerInterface
     public function collectAndSendCoverage($args)
     {
         // Starting point!
-        $this->printer->out("\n\n".'Collecting CodeCoverage...');
+        $this->printer->out("\n\n".'Collecting CodeCoverage information...');
 
         if (array_key_exists('repo_token', $args) 
             && array_key_exists('target_url', $args)
