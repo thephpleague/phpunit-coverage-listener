@@ -78,6 +78,28 @@ Bellow table describe each configuration options respectively :
 
 This option contains `PrinterInterface` that will be used by Listener class in several points. In previous section, we set it to use `StdOut` printer that will print out any output informations directly into standard output. You could use your own printer class as long as it implements required interface.
 
+### hook
+
+This option allow you to hook into Listener life-cycle. `HookInterface` has two method to be implemented : `beforeCollect` and `afterCollect`. It will receive `Collection` data, and then will alter or do something with the data on each hook point. In the previous example, `Travis` hook actually only contains bellow code :
+
+    public function beforeCollect(Collection $data)
+    {
+        // Check for Travis-CI environment
+        // if it appears, then assign it respectively
+        if (getenv('TRAVIS_JOB_ID') || isset($_ENV['TRAVIS_JOB_ID'])) {
+            // Remove repo token
+            $data->remove('repo_token');
+
+            // And use travis config
+            $travis_job_id = isset($_ENV['TRAVIS_JOB_ID']) ? $_ENV['TRAVIS_JOB_ID'] : getenv('TRAVIS_JOB_ID');
+            $data->set('service_name', 'travis-ci');
+            $data->set('service_job_id', $travis_job_id);
+        }
+
+        return $data;
+    }
+
+You could register your own hook class that suit for your need as long as it implements required interface.
 
 This 
 
