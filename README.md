@@ -4,7 +4,7 @@ PHPUnit Coverage Listener
 
 PHPUnit Coverage Listener is a utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL.
 
-The main goal of the PHPunit Coverage Listener package is to provide a mechanism that generate a payload data (from PHPUnit code-coverage information), with bellow format (simplified) :
+The main goal of the PHPunit Coverage Listener package is to provide a mechanism that generate a payload data (from PHPUnit code-coverage information), with bellow structure (simplified) :
 
     {
       "repo_token": "s3cr3th4sh",
@@ -18,7 +18,7 @@ The main goal of the PHPunit Coverage Listener package is to provide a mechanism
       ]
     }
 
-and then send these payload data into some remote location to be processing further, that could be used to provide usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario. But this package have several flexibilities that enable you to use it in a way that fit with your specific need (not limited to one service like Coveralls).
+and then send these payload data into some remote location to be processing further. That could be used to provide usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario.
 
 Requirement
 -----------
