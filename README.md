@@ -109,6 +109,14 @@ Option `namespace` string could be passed into the Listener, so that the generat
 
 This option could be anything. Timestamp? Coveralls account token? Jenkins build token? Its up to you. But it was still neccessary to supply this option into the Listener class.
 
+### target_url
+
+This option could be any valid url. For example, if you use Coveralls this option can be set to its REST endpoint : `https://coveralls.io/api/v1/jobs`.
+
+### coverage_dir
+
+The directory you specified here **must** be the same directory from which PHPUnit generate `coverage.xml` report. Listener will also outputing `coverage.json` within this directory, so ensure this directory is writable.
+
 Changelog
 ---------
 
