@@ -126,6 +126,7 @@ class Listener implements ListenerInterface
      * Printer validator
      *
      * @param array
+     * @throws RuntimeException
      */
     protected function ensurePrinter($args)
     {
@@ -206,10 +207,14 @@ class Listener implements ListenerInterface
      *
      * @param SimpleXMLElement contains coverage information
      * @param string Optional file namespace identifier
+     * @throws RuntimeException
      * @return array contains code-coverage data with keys as follow : name, source, coverage
      */
     protected function collectFromFile(SimpleXMLElement $file, $namespace = '')
     {
+        // Validate
+        if ( ! is_file($file['name'])) throw new \RuntimeException('Invalid '.self::COVERAGE_FILE.' file');
+
         // Get current dir
         $currentDir = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
 
