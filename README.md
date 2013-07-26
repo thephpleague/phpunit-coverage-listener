@@ -19,8 +19,6 @@ Requirement
 -----------
 
 * PHP >= 5.3.3
-* PHPUnit
-* xDebug (inherit from PHPUnit Code-Coverage requirement)
 
 Usage
 -----
