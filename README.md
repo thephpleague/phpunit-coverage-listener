@@ -24,7 +24,7 @@ Via Composer
 Basic Usage
 -----------
 
-Let's say you want to send a payload data for [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need is adding bellow section within your phpunit configuration :
+Let's say you want to send a payload data for [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need is to adding bellow section within your phpunit configuration :
 	
 	<logging>
         <log type="coverage-clover" target="/tmp/coverage.xml"/>
@@ -101,7 +101,13 @@ This option allow you to hook into Listener life-cycle. `HookInterface` has two 
 
 You could register your own hook class that suit for your need as long as it implements required interface.
 
-This 
+### namespace
+
+Option `namespace` string could be passed into the Listener, so that the generated coverage information use "relative" name instead literal file path. For example, if your source is `src/My/Package/Resource.php`, and you passing `My/Package` as namespace option, generated file name will be `My/Package/Resource.php`.
+
+### repo_token
+
+This option could be anything. Timestamp? Coveralls account token? Jenkins build token? Its up to you. But it was still neccessary to supply this option into the Listener class.
 
 Changelog
 ---------
