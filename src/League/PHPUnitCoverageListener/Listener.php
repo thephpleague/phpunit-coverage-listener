@@ -33,13 +33,7 @@ class Listener implements ListenerInterface
      */
     public function __construct($args = array(), $boot = true)
     {
-    	if ( ! isset($args['printer'])) {
-    		throw new \RuntimeException('Printer class not found');
-    	}
-
-    	if ( ! $args['printer'] instanceof PrinterInterface) {
-    		throw new \RuntimeException('Invalid printer class');
-    	}
+        $this->ensurePrinter($args);
 
     	$this->printer = $args['printer'];
 
@@ -114,7 +108,7 @@ class Listener implements ListenerInterface
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
                 // Save output into output buffer
-                ob_get_level() or ob_start();
+                ob_start();
                 $result = curl_exec ($ch); 
                 $curlOutput = ob_get_contents();
                 ob_end_clean();
@@ -129,13 +123,30 @@ class Listener implements ListenerInterface
     }
 
     /**
+     * Printer validator
+     *
+     * @param array
+     */
+    protected function ensurePrinter($args)
+    {
+        if ( ! isset($args['printer'])) {
+            throw new \RuntimeException('Printer class not found');
+        }
+
+
+        if ( ! $args['printer'] instanceof PrinterInterface) {
+            throw new \RuntimeException('Invalid printer class');
+        }
+    }
+
+    /**
      * Main collector method
      *
      * @param SimpleXMLElement Coverage report from PHPUnit
      * @param array
      * @return Collection
      */
-    public function collect(SimpleXMLElement $coverage, $args = array())
+    protected function collect(SimpleXMLElement $coverage, $args = array())
     {
     	extract($args);
 
@@ -197,7 +208,7 @@ class Listener implements ListenerInterface
      * @param string Optional file namespace identifier
      * @return array contains code-coverage data with keys as follow : name, source, coverage
      */
-    public function collectFromFile(SimpleXMLElement $file, $namespace = '')
+    protected function collectFromFile(SimpleXMLElement $file, $namespace = '')
     {
         // Get current dir
         $currentDir = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
