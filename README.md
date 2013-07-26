@@ -36,6 +36,7 @@ Please see [CONTRIBUTING](https://github.com/php-loep/phpunit-coverage-listener/
 Support
 -------
 
+Bugs and feature request are tracked on [GitHub](https://github.com/php-loep/phpunit-coverage-listener/issues)
 
 License
 -------
