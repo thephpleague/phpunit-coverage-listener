@@ -23,7 +23,7 @@ Requirement
 Basic Usage
 -----------
 
-Let's say you want to send a payload data to [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need is adding bellow section within your phpunit configuration :
+Let's say you want to send a payload data for [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need is adding bellow section within your phpunit configuration :
 	
 	<logging>
         <log type="coverage-clover" target="/tmp/coverage.xml"/>
@@ -60,7 +60,9 @@ And thats it.
 Advance Usage
 -------------
 
-As you noticed on previous section, in order to work properly Listener class need to know several things, they are : 
+As you may noticed on previous section, in order to work properly, Listener class need to know several things. They are being passed from `phpunit.xml` file.
+
+Bellow table describe each configuration respectively : 
 
 | Key Name | Value | Description
 | :---: | :---: | :---: |
