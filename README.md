@@ -151,7 +151,7 @@ The directory you specified here **must** be the same directory from which PHPUn
 
 ### send
 
-As default, this library purpose is to collect and then send those payload data into remote location. But if you want to only collect and generate the data, add bellow option :
+As default, this library purpose is to collect and generate code-coverage data then send those payload data into remote location. But if you want to only collect and generate the data, add bellow option :
 
     <element key="send">
         <integer>0</integer>
