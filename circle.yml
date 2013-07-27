@@ -1,8 +1,7 @@
 dependencies:
   override:
     - pecl install xdebug
-    - cat ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini | sed -e "s/;//" > xdebug.ini
-    - mv xdebug.ini ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+    - echo "zend_extension=xdebug.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 test:
   override:
