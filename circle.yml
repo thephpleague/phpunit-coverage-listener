@@ -1,7 +1,10 @@
+machine:
+  php:
+    version: 5.3.10
+
 dependencies:
-  override:
-    - pecl install xdebug
-    - echo "zend_extension=xdebug.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  pre:
+    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
 
 test:
   override:
