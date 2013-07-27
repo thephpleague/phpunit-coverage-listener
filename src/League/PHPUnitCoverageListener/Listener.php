@@ -313,12 +313,16 @@ class Listener implements ListenerInterface
 
         if (is_dir($gitDirectory)) {
             // Get refs info from HEAD
+            $branch = '';
             $head = Yaml::parse($gitDirectory.DIRECTORY_SEPARATOR.self::GIT_HEAD);
-            $ref = $head['ref'];
-            $refComponents = explode('/', $ref);
+
+            if (array_key_exists('ref', $head)) {
+                $ref = $head['ref'];
+                $branch = array_pop(explode('/', $ref));
+            } 
 
             // Assign branch information
-            $git->set('branch', current(array_reverse($refComponents)));
+            $git->set('branch', $branch);
 
             // Get log information
             $logRaw = self::execute('cd '.$this->getDirectory().';git log -1');
