@@ -62,7 +62,7 @@ class Listener implements ListenerInterface
         $this->printer->out("\n\n".'Collecting CodeCoverage information...');
 
         // Just collect or also send?
-        if (array_key_exists('send', $args) && $args['send'] === false) {
+        if (array_key_exists('send', $args) && $args['send'] == false) {
             // In some point we may only want to generate the payload
             // so if 'send' parameter exists and set to false we'll only
             // collect and write code-coverage payload
