@@ -42,8 +42,16 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 
 	public function testCollectAndSendCoverage()
 	{
-		if (!getenv('TRAVIS_JOB_ID')) {
-			$this->markTestSkipped('This test was intended to run within Travis environment');
+		if (!getenv('TRAVIS_JOB_ID') && !getenv('CIRCLECI')) {
+			$this->markTestSkipped('This test was intended to run within CI environment');
+		}
+
+		if (getenv('TRAVIS_JOB_ID')) {
+			$service = 'travis';
+			$hook = new Travis();
+		} elseif (getenv('CIRCLECI')) {
+			$service = 'circle';
+			$hook = new Circle();
 		}
 
 		$listener = new Listener(array(
@@ -52,11 +60,11 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 
 		// Use League\PHPUnitCoverageListener coveralls informations
 		$listener->collectAndSendCoverage(array(
-			'hook' => new Travis(),
+			'hook' => $hook,
 			'namespace' => 'League\PHPUnitCoverageListener',
 			'repo_token' => 'XKUga6etuxSWYPXJ0lAiDyHM2jbKPQAKC',
 			'target_url' => 'https://coveralls.io/api/v1/jobs',
-			'coverage_dir' => realpath(__DIR__.'/Mocks/data'),
+			'coverage_dir' => realpath(__DIR__.'/Mocks/data/'.$service),
 		));
 
 		$output = $listener->getPrinter()->output;
