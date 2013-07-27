@@ -42,7 +42,7 @@ Via Composer
 
     {
         "require": {
-            "league/phpunit-coverage-listener": "~1.0"
+            "league/phpunit-coverage-listener": "~1.1"
         }
     }
     
