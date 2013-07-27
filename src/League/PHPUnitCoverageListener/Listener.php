@@ -154,6 +154,7 @@ class Listener implements ListenerInterface
     	$data = new Collection(array(
             'repo_token' => $repo_token,
             'source_files' => array(),
+            'run_at' => gmdate('Y-m-d H:i:s -0000'),
         ));
 
  		// Before collect hook
