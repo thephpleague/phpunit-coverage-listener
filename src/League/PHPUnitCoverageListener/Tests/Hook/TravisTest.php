@@ -47,6 +47,7 @@ class TravisTest extends PHPUnit_Framework_TestCase
 
 		$values = $data->all();
 
+		$this->assertEquals('travis-ci', $values['service_name']);
 		$this->assertEquals('some-fake-id', $values['service_job_id']);
 
 		unset($_ENV['TRAVIS_JOB_ID']);
