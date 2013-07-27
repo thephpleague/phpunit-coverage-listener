@@ -4,7 +4,7 @@ PHPUnit Coverage Listener
 
 PHPUnit Coverage Listener is a utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL.
 
-The main goal of the PHPunit Coverage Listener package is to provide a mechanism that generate a payload data (from PHPUnit code-coverage information), with bellow structure (simplified) :
+The main goal of the PHPunit Coverage Listener package is to provide a mechanism that generate a payload data (from PHPUnit code-coverage information) named `coverage.json`, with bellow structure (simplified) :
 
     {
       "repo_token": "s3cr3th4sh",
@@ -16,10 +16,19 @@ The main goal of the PHPunit Coverage Listener package is to provide a mechanism
           "coverage": [null, 2]                       // Coverage information on each lines
         },
         //... other source information
-      ]
+      ],
+      "git": {
+          "branch":"master",
+          "head" : {
+              "id":"50b111bc45ba9af702ea3230c8e44bd5e4060668",
+              "author_name: "toopay",
+              "author_email: "toopay@taufanaditya.com",
+              "message": "Commit message"
+          }
+      }
     }
 
-and then send these payload data into some remote location to be processing further. That could be used to provide usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario.
+That could be used to provide usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario.
 
 Requirement
 -----------
@@ -90,6 +99,7 @@ Bellow table describe each configuration options respectively :
 | `repo_token` | `String` | Required |
 | `target_url` | `String` | Required |
 | `coverage_dir` | `String` | Required |
+| `send` | `bool` | Optional |
 
 ### printer
 
@@ -116,7 +126,7 @@ This option allow you to hook into Listener life-cycle. `HookInterface` has two 
         return $data;
     }
 
-You could register your own hook class that suit for your need as long as it implements required interface.
+Currently there are `Travis` and `Circle` hooks. You could register your own hook class that suit for your need as long as it implements required interface.
 
 ### namespace
 
@@ -133,6 +143,16 @@ This option could be any valid url. For example, if you use Coveralls this optio
 ### coverage_dir
 
 The directory you specified here **must** be the same directory from which PHPUnit generate `coverage.xml` report. Listener will also outputing `coverage.json` within this directory, so ensure this directory is writable.
+
+### send
+
+As default, this library purpose is to collect and then send those payload data into remote location. But if you want to only collect and generate the data, add bellow option :
+
+    <element key="send">
+        <integer>0</integer>
+    </element>
+
+within the listener arguments array directive.
 
 Changelog
 ---------
