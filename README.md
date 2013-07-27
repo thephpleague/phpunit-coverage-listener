@@ -21,10 +21,15 @@ The main goal of the PHPunit Coverage Listener package is to provide a mechanism
           "branch":"master",
           "head" : {
               "id":"50b111bc45ba9af702ea3230c8e44bd5e4060668",
-              "author_name: "toopay",
-              "author_email: "toopay@taufanaditya.com",
+              "author_name": "toopay",
+              "author_email": "toopay@taufanaditya.com",
               "message": "Commit message"
-          }
+          },
+          remotes: [{
+            "name": "origin",
+            "url": "git@github.com:php-loep/phpunit-coverage-listener.git",
+            "fetch": "+refs/heads/*:refs/remotes/origin/*"
+          }]
       }
     }
 
