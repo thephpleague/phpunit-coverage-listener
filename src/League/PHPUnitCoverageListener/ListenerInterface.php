@@ -11,6 +11,8 @@ interface ListenerInterface
 {
 	const COVERAGE_FILE = 'coverage.xml';
     const COVERAGE_OUTPUT = 'coverage.json';
+    const GIT_DIRECTORY = '.git';
+    const GIT_HEAD = 'HEAD';
 
     /**
      * Listener constructor

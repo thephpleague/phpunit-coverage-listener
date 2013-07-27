@@ -4,6 +4,7 @@ use League\PHPUnitCoverageListener\ListenerInterface;
 use League\PHPUnitCoverageListener\PrinterInterface;
 use League\PHPUnitCoverageListener\HookInterface;
 use League\PHPUnitCoverageListener\Collection;
+use Symfony\Component\Yaml\Yaml;
 use \SimpleXMLElement;
 
 /**
@@ -15,6 +16,11 @@ use \SimpleXMLElement;
 
 class Listener implements ListenerInterface
 {
+    /**
+     * @var string
+     */
+    protected $directory;
+
 	/**
 	 * @var PrinterInterface
 	 */
@@ -33,9 +39,13 @@ class Listener implements ListenerInterface
      */
     public function __construct($args = array(), $boot = true)
     {
+        // Get printer
         $this->ensurePrinter($args);
 
     	$this->printer = $args['printer'];
+
+        // Get directory
+        $this->directory = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
 
     	// @coverageIgnoreStart
         if ($boot) {
@@ -57,6 +67,16 @@ class Listener implements ListenerInterface
     public function getPrinter()
     {
     	return $this->printer;
+    }
+
+    /**
+     * Directory getter
+     *
+     * @return Path from which the script runs
+     */
+    public function getDirectory()
+    {
+        return $this->directory;
     }
 
     /**
@@ -155,6 +175,7 @@ class Listener implements ListenerInterface
             'repo_token' => $repo_token,
             'source_files' => array(),
             'run_at' => gmdate('Y-m-d H:i:s -0000'),
+            'git' => $this->collectFromGit()->all(),
         ));
 
  		// Before collect hook
@@ -217,7 +238,7 @@ class Listener implements ListenerInterface
         if ( ! is_file($file['name'])) throw new \RuntimeException('Invalid '.self::COVERAGE_FILE.' file');
 
         // Get current dir
-        $currentDir = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
+        $currentDir = $this->getDirectory();
 
         // Initial return values
         $name = '';
@@ -275,5 +296,85 @@ class Listener implements ListenerInterface
         }
 
         return compact('name', 'source', 'coverage');
+    }
+
+    /**
+     * Collect git information
+     *
+     * @return Collection
+     * @codeCoverageIgnore
+     */
+    public function collectFromGit()
+    {
+        // Initial git data
+        $git = new Collection();
+
+        $gitDirectory = $this->getDirectory().DIRECTORY_SEPARATOR.self::GIT_DIRECTORY;
+
+        if (is_dir($gitDirectory)) {
+            // Get refs info from HEAD
+            $head = Yaml::parse($gitDirectory.DIRECTORY_SEPARATOR.self::GIT_HEAD);
+            $ref = $head['ref'];
+            $refComponents = explode('/', $ref);
+
+            // Assign branch information
+            $git->set('branch', current(array_reverse($refComponents)));
+
+            // Get log information
+            $logRaw = self::execute('cd '.$this->getDirectory().';git log -1');
+            $idRaw = $logRaw[0];
+            $authorRaw = $logRaw[1];
+
+            // Build head information
+            list($author, $email) = explode('<', str_replace('Author:', '', $authorRaw));
+
+            $id = trim(str_replace('commit', '', $idRaw));
+            $author_name = $committer_name = trim($author);
+            $author_email = $committer_email = trim($email, '>');
+            $message = $logRaw[4].(isset($logRaw[5]) ? '...' : '');
+
+            // Assign Head information
+            $git->set('head', compact('id', 'author_name', 'author_email', 
+                            'committer_name', 'committer_email', 'message'));
+
+            // Get remotes information
+            $remotes = array();
+            $configRaw = self::execute('cd '.$this->getDirectory().';git config --local -l');
+            array_walk($configRaw,function($v) use(&$remotes)
+            {
+                if (0 === strpos($v, 'remote')) {
+                    list($key, $prop) = explode('=', $v);
+                    $k = explode('.', $key);
+                    $attribute = array_pop($k);
+                    $name = array_pop($k);
+                    $remotes[$name]['name'] = $name;
+                    $remotes[$name][$attribute] = $prop;
+                }
+            });
+
+            // Assign Remotes information
+            $git->set('remotes', array_values($remotes));
+        }
+
+        return $git;
+    }
+
+    /**
+     * Execute a command and parse the output as array
+     *
+     * @param string 
+     * @return array 
+     */
+    protected static function execute($command)
+    {
+        $res = array();
+
+        ob_start();
+        passthru($command, $success);
+        $output = ob_get_clean();
+
+        foreach ((explode("\n", $output)) as $line) $res[] = trim($line);
+
+        return array_filter($res);
     }
 }
