@@ -66,9 +66,9 @@ class CircleTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($data->has('repo_token'));
 
 		// Nothing happens on after callback
-		$travis = new Travis();
+		$circle = new Circle();
 
-		$data = $travis->afterCollect($data);
+		$data = $circle->afterCollect($data);
 
 		$this->assertTrue($data->has('repo_token'));
 	}
