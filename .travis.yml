@@ -7,4 +7,4 @@ php:
 before_script:
   - composer install --prefer-source
 
-script: vendor/bin/phpunit
+script: vendor/bin/phpunit --configuration configuration/travis.xml
