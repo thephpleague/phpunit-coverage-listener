@@ -33,7 +33,22 @@ The main goal of the PHPunit Coverage Listener package is to provide a mechanism
       }
     }
 
-That could be used to provide usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario.
+Then in the target server, you could accept the payload as follow (simplified) :
+
+  <?php
+
+  $success = false;
+
+  if (!empty($_FILES) && isset($_FILES['json_file'])) {
+    $target = __DIR__.'/coverage.json';
+    move_uploaded_file($_FILES['json_file']['tmp_name'], $target);
+    $success = 'Saved into http://'.$_SERVER['HTTP_HOST'].'/coverage.json';
+  }
+
+  header('Content-Type: application/json');
+  die(json_encode(compact('success')));
+
+Above json data could be process furthermore to expose usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario.
 
 Requirement
 -----------
