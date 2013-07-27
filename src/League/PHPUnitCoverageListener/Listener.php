@@ -47,16 +47,37 @@ class Listener implements ListenerInterface
         // Get directory
         $this->directory = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
 
-    	// @coverageIgnoreStart
         if ($boot) {
 	    	$listener = $this;
 
 	        // Register the method to collect code-coverage information
-	        register_shutdown_function(function() use ($args, $listener) {
-	            $listener->collectAndSendCoverage($args);
-	        });
+	        register_shutdown_function(function() use ($args, $listener) { $listener->handle($args); });
         }
-    	// @coverageIgnoreEnd
+    }
+
+    /**
+     * Main handler
+     *
+     * @param array
+     */
+    public function handle($args)
+    {
+        // Starting point!
+        $this->printer->out("\n\n".'Collecting CodeCoverage information...');
+
+        // Just collect or also send?
+        if (array_key_exists('send', $args) && $args['send'] === false) {
+            // In some point we may only want to generate the payload
+            // so if 'send' parameter exists and set to false we'll only
+            // collect and write code-coverage payload
+            $this->printer->collectAndWriteCoverage($args);
+        } else {
+            // Default is to collect and send
+            $this->printer->collectAndSendCoverage($args);
+        }
+
+        // Done
+        $this->printer->out('Done.');
     }
 
     /**
@@ -80,25 +101,19 @@ class Listener implements ListenerInterface
     }
 
     /**
-     * Main api for collecting code-coverage information
+     * Main api for collecting code-coverage information and write it into json payload
      *
-     * @param array Contains repo secret hash, target url, coverage directory and optional Namespace
+     * @param array 
      */
-    public function collectAndSendCoverage($args)
+    public function collectAndWriteCoverage($args)
     {
-        // Starting point!
-        $this->printer->out("\n\n".'Collecting CodeCoverage information...');
-
-        if (array_key_exists('repo_token', $args) 
-            && array_key_exists('target_url', $args)
-            && array_key_exists('coverage_dir', $args)
-            && array_key_exists('namespace', $args)) {
+        if ($this->valid($args)) {
             extract($args);
 
             // Check for exist and valid hook
             if (isset($hook) && $hook instanceof HookInterface) {
-            	$this->hook = $hook;
-            	unset($hook);
+                $this->hook = $hook;
+                unset($hook);
             }
 
             // Get the realpath coverage directory
@@ -108,9 +123,9 @@ class Listener implements ListenerInterface
 
             // Get the coverage information
             if (is_dir($coverage_dir) && is_file($coverage_file)) {
-            	// Build the coverage xml object
-		        $xml = file_get_contents($coverage_file);
-		        $coverage = new SimpleXMLElement($xml);
+                // Build the coverage xml object
+                $xml = file_get_contents($coverage_file);
+                $coverage = new SimpleXMLElement($xml);
 
                 // Prepare the coveralls payload
                 $data = $this->collect($coverage, $args);
@@ -118,28 +133,59 @@ class Listener implements ListenerInterface
                 // Write the coverage output
                 $this->printer->out('Writing coverage output...');
                 file_put_contents($coverage_output, json_encode($data->all(), JSON_NUMERIC_CHECK));
-
-                // Send it!
-                $this->printer->out('Sending coverage output...');
-                $payload = array('json_file'=>'@'.$coverage_output); 
-                $ch = curl_init(); 
-                curl_setopt($ch, CURLOPT_URL, $target_url); 
-                curl_setopt($ch, CURLOPT_POST,1); 
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-
-                // Save output into output buffer
-                ob_start();
-                $result = curl_exec ($ch); 
-                $curlOutput = ob_get_contents();
-                ob_end_clean();
-
-                curl_close ($ch); 
-                $this->printer->printOut('cURL Output:'.$curlOutput); 
-                $this->printer->printOut('cURL Result:'.$result);
             }
         }
+    }
 
-        $this->printer->out('Done.');
+    /**
+     * Main api for collecting code-coverage information
+     *
+     * @param array Contains repo secret hash, target url, coverage directory and optional Namespace
+     */
+    public function collectAndSendCoverage($args)
+    {
+        // Collect and write out the data
+        $this->collectAndWriteCoverage($args);
+
+        if ($this->valid($args)) {
+            extract($args);
+
+            // Get the realpath coverage directory
+            $coverage_dir = realpath($coverage_dir);
+            $coverage_output = $coverage_dir.DIRECTORY_SEPARATOR.self::COVERAGE_OUTPUT;
+
+            // Send it!
+            $this->printer->out('Sending coverage output...');
+            $payload = array('json_file'=>'@'.$coverage_output); 
+            $ch = curl_init(); 
+            curl_setopt($ch, CURLOPT_URL, $target_url); 
+            curl_setopt($ch, CURLOPT_POST,1); 
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+
+            // Save output into output buffer
+            ob_start();
+            $result = curl_exec ($ch); 
+            $curlOutput = ob_get_contents();
+            ob_end_clean();
+
+            curl_close ($ch); 
+            $this->printer->printOut('cURL Output:'.$curlOutput); 
+            $this->printer->printOut('cURL Result:'.$result);
+        }
+    }
+
+    /**
+     * Argument validator
+     *
+     * @param array
+     * @return bool
+     */
+    protected function valid($args = array())
+    {
+         return array_key_exists('repo_token', $args) 
+            && array_key_exists('target_url', $args)
+            && array_key_exists('coverage_dir', $args)
+            && array_key_exists('namespace', $args);
     }
 
     /**
@@ -302,7 +348,6 @@ class Listener implements ListenerInterface
      * Collect git information
      *
      * @return Collection
-     * @codeCoverageIgnore
      */
     public function collectFromGit()
     {

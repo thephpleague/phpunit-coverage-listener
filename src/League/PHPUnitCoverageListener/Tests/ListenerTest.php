@@ -41,18 +41,17 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('League\PHPUnitCoverageListener\PrinterInterface', $listener->getPrinter());
 	}
 
-	public function testCollectAndSendCoverage()
+	public function testCollectWriteSendCoverage()
 	{
-		if (!getenv('TRAVIS_JOB_ID') && !getenv('CIRCLECI')) {
-			$this->markTestSkipped('This test was intended to run within CI environment');
-		}
-
 		if (getenv('TRAVIS_JOB_ID')) {
 			$service = 'travis';
 			$hook = new Travis();
 		} elseif (getenv('CIRCLECI')) {
 			$service = 'circle';
 			$hook = new Circle();
+		} else {
+			$service = 'custom';
+			$hook = new MockHook();
 		}
 
 		$listener = new Listener(array(
@@ -64,22 +63,20 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 			'hook' => $hook,
 			'namespace' => 'League\PHPUnitCoverageListener',
 			'repo_token' => 'XKUga6etuxSWYPXJ0lAiDyHM2jbKPQAKC',
-			'target_url' => 'https://coveralls.io/api/v1/jobs',
+			'target_url' => 'http://phpunit-coverage-listener.taufanaditya.com/hook.php',
 			'coverage_dir' => realpath(__DIR__.'/Mocks/data/'.$service),
 		));
 
 		$output = $listener->getPrinter()->output;
 
 		// Verify the output
-		$this->assertContains('Collecting CodeCoverage information...', $output[0]);
+		$this->assertContains(' * Checking:', $output[0]);
 		$this->assertContains(' * Checking:', $output[1]);
 		$this->assertContains(' * Checking:', $output[2]);
 		$this->assertContains(' * Checking:', $output[3]);
-		$this->assertContains(' * Checking:', $output[4]);
-		$this->assertContains('Writing coverage output...', $output[5]);
-		$this->assertContains('Sending coverage output...', $output[6]);
-		$this->assertContains(' * cURL Output:', $output[7]);
-		$this->assertContains(' * cURL Result:', $output[8]);
-		$this->assertContains('Done.', $output[9]);
+		$this->assertContains('Writing coverage output...', $output[4]);
+		$this->assertContains('Sending coverage output...', $output[5]);
+		$this->assertContains(' * cURL Output:', $output[6]);
+		$this->assertContains(' * cURL Result:', $output[7]);
 	}
 }
