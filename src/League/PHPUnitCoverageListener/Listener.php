@@ -363,7 +363,8 @@ class Listener implements ListenerInterface
 
             if (is_array($head) && array_key_exists('ref', $head)) {
                 $ref = $head['ref'];
-                $branch = array_pop(explode('/', $ref));
+                $r = explode('/', $ref);
+                $branch = array_pop($r);
             } 
 
             // Assign branch information
