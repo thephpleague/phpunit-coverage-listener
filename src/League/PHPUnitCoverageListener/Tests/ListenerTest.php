@@ -5,6 +5,7 @@ use League\PHPUnitCoverageListener\PrinterInterface;
 use League\PHPUnitCoverageListener\Listener;
 use League\PHPUnitCoverageListener\Printer\ArrayOut;
 use League\PHPUnitCoverageListener\Hook\Travis;
+use League\PHPUnitCoverageListener\Hook\Circle;
 use League\PHPUnitCoverageListener\Tests\Mocks\MockHook;
 use \PHPUnit_Framework_TestCase;
 
