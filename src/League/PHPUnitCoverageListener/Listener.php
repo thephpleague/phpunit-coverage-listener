@@ -47,12 +47,8 @@ class Listener implements ListenerInterface
         // Get directory
         $this->directory = (isset($_SERVER['PWD'])) ? realpath($_SERVER['PWD']) : getcwd();
 
-        if ($boot) {
-	    	$listener = $this;
-
-	        // Register the method to collect code-coverage information
-	        register_shutdown_function(function() use ($args, $listener) { $listener->handle($args); });
-        }
+        // Register the method to collect code-coverage information
+        if ($boot && ($listener = $this)) register_shutdown_function(function() use ($args, $listener) { $listener->handle($args); });
     }
 
     /**
@@ -246,6 +242,8 @@ class Listener implements ListenerInterface
             }
         }
 
+        // In case the files are not using any namespace at all...
+        // @codeCoverageIgnoreStart
         if (count($coverage->project->file) > 0) {
             // itterate over the files
             foreach ($coverage->project->file as $file) {
@@ -256,6 +254,7 @@ class Listener implements ListenerInterface
                 ));
             }
         }
+        // @codeCoverageIgnoreEnd
 
         // Last, pass the source information it it contains any information
         if ($sourceArray->count() > 0) {
@@ -294,10 +293,9 @@ class Listener implements ListenerInterface
         // #1 Get the relative file name
         $pathComponents = explode($currentDir, $file['name']);
         $relativeName = count($pathComponents) == 2 ? $pathComponents[1] : current($pathComponents);
+        $name = trim($relativeName, DIRECTORY_SEPARATOR);
 
-        if (empty($namespace)) {
-            $name = trim($relativeName, DIRECTORY_SEPARATOR);
-        } else {
+        if ( ! empty($namespace)) {
             // Replace backslash with directory separator
             $ns = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
             $nsComponents = explode($ns, $relativeName);
@@ -361,11 +359,13 @@ class Listener implements ListenerInterface
             $branch = '';
             $head = Yaml::parse($gitDirectory.DIRECTORY_SEPARATOR.self::GIT_HEAD);
 
+            // @codeCoverageIgnoreStart
             if (is_array($head) && array_key_exists('ref', $head)) {
                 $ref = $head['ref'];
                 $r = explode('/', $ref);
                 $branch = array_pop($r);
             } 
+            // @codeCoverageIgnoreEnd
 
             // Assign branch information
             $git->set('branch', $branch);

@@ -48,7 +48,7 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 		), false);
 
 		// Test writer
-		$listener->handle(array());
+		$listener->handle(array('send' => false));
 
 		$output = $listener->getPrinter()->output;
 
