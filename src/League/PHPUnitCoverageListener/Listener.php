@@ -316,7 +316,7 @@ class Listener implements ListenerInterface
             $branch = '';
             $head = Yaml::parse($gitDirectory.DIRECTORY_SEPARATOR.self::GIT_HEAD);
 
-            if (array_key_exists('ref', $head)) {
+            if (is_array($head) && array_key_exists('ref', $head)) {
                 $ref = $head['ref'];
                 $branch = array_pop(explode('/', $ref));
             } 
