@@ -70,10 +70,10 @@ class Listener implements ListenerInterface
             // In some point we may only want to generate the payload
             // so if 'send' parameter exists and set to false we'll only
             // collect and write code-coverage payload
-            $this->printer->collectAndWriteCoverage($args);
+            $this->collectAndWriteCoverage($args);
         } else {
             // Default is to collect and send
-            $this->printer->collectAndSendCoverage($args);
+            $this->collectAndSendCoverage($args);
         }
 
         // Done

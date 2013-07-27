@@ -41,6 +41,31 @@ class ListenerTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('League\PHPUnitCoverageListener\PrinterInterface', $listener->getPrinter());
 	}
 
+	public function testHandler()
+	{
+		$listener = new Listener(array(
+			'printer' => new ArrayOut
+		), false);
+
+		// Test writer
+		$listener->handle(array());
+
+		$output = $listener->getPrinter()->output;
+
+		// Verify the output
+		$this->assertContains('Collecting CodeCoverage information', $output[0]);
+		$this->assertContains('Done', $output[1]);
+
+		// Test sender
+		$listener->handle(array());
+
+		$output = $listener->getPrinter()->output;
+
+		// Verify the output
+		$this->assertContains('Collecting CodeCoverage information', $output[0]);
+		$this->assertContains('Done', $output[1]);
+	}
+
 	public function testCollectWriteSendCoverage()
 	{
 		if (getenv('TRAVIS_JOB_ID')) {
