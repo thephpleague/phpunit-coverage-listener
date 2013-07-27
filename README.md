@@ -8,6 +8,7 @@ The main goal of the PHPunit Coverage Listener package is to provide a mechanism
 
     {
       "repo_token": "s3cr3th4sh",
+      "run_at": "2013-01-20 00:10:10 -0000",
       "source_files": [
         {
           "name": "Resource.php",
@@ -56,7 +57,7 @@ Let's say you want to send a payload data for [Coveralls](https://coveralls.io/)
                       <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
                     </element>
                     <element key="namespace">
-                        <string>League\PHPUnitCoverageListener</string>
+                        <string>Your\Package\Namespace</string>
                     </element>
                     <element key="repo_token">
                         <string>YourCoverallsRepoToken</string>
