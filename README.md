@@ -41,7 +41,7 @@ Via Composer
 Basic Usage
 -----------
 
-Let's say you want to send a payload data for [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need to do is adding bellow section within your phpunit configuration :
+Let's say you want to send a payload data for [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need to do is adding bellow section within your phpunit configuration that used by `.travis.yml` (mostly you wont need this in your development environment) :
 	
 	<logging>
         <log type="coverage-clover" target="/tmp/coverage.xml"/>
