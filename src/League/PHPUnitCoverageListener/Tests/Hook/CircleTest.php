@@ -2,7 +2,7 @@
 
 use League\PHPUnitCoverageListener\Collection;
 use League\PHPUnitCoverageListener\HookInterface;
-use League\PHPUnitCoverageListener\Hook\Travis;
+use League\PHPUnitCoverageListener\Hook\Circle;
 use \PHPUnit_Framework_TestCase;
 
 /**
