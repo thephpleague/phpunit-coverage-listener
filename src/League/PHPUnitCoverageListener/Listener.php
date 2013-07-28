@@ -376,12 +376,15 @@ class Listener implements ListenerInterface
             $authorRaw = $logRaw[1];
 
             // Build head information
-            list($author, $email) = explode('<', str_replace('Author:', '', $authorRaw));
+            if (strpos($authorRaw, '<') !== false) {
+                 list($author, $email) = explode('<', str_replace('Author:', '', $authorRaw));
 
-            $id = trim(str_replace('commit', '', $idRaw));
-            $author_name = $committer_name = trim($author);
-            $author_email = $committer_email = trim($email, '>');
-            $message = $logRaw[4].(isset($logRaw[5]) ? '...' : '');
+                $id = trim(str_replace('commit', '', $idRaw));
+                $author_name = $committer_name = trim($author);
+                $author_email = $committer_email = trim($email, '>');
+                $message = $logRaw[4].(isset($logRaw[5]) ? '...' : '');
+            }
+           
 
             // Assign Head information
             $git->set('head', compact('id', 'author_name', 'author_email', 
