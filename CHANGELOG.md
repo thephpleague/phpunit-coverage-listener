@@ -1,5 +1,8 @@
 Changelog
 =========
+## 1.1.1 (released 2013-07-28)
+
+* Fix undefined index on non-valid head info. Ref : 29679a190001e0539b939608c5c2bd1a959938ab
 
 ## 1.1.0 (released 2013-07-28)
 
