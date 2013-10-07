@@ -152,7 +152,15 @@ class Listener implements ListenerInterface
 
             // Send it!
             $this->printer->out('Sending coverage output...');
-            $payload = array('json_file'=>'@'.$coverage_output); 
+
+
+            // Workaround for cURL create file
+            if (function_exists('curl_file_create')) {
+                $payload = curl_file_create('json_file', 'application/json', $coverage_output);
+            } else {
+                $payload = array('json_file'=>'@'.$coverage_output);
+            }
+
             $ch = curl_init(); 
             curl_setopt($ch, CURLOPT_URL, $target_url); 
             curl_setopt($ch, CURLOPT_POST,1); 
