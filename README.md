@@ -5,48 +5,51 @@ PHPUnit Coverage Listener
 PHPUnit Coverage Listener is a utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL.
 
 The main goal of the PHPunit Coverage Listener package is to provide a mechanism that generate a payload data (from PHPUnit code-coverage information) named `coverage.json` and send it to remote location, with bellow structure (simplified) :
-
-    {
-      "repo_token": "s3cr3th4sh",
-      "run_at": "2013-01-20 00:10:10 -0000",
-      "source_files": [
+```json
+{
+    "repo_token": "s3cr3th4sh",
+        "run_at": "2013-01-20 00:10:10 -0000",
+        "source_files": [
         {
-          "name": "Resource.php",
-          "source": "<?php \n  echo 'Hello World'\n", // Source code contains 2 lines
-          "coverage": [null, 2]                       // Coverage information on each lines
+            "name": "Resource.php",
+            "source": "<?php \n  echo 'Hello World'\n", // Source code contains 2 lines
+            "coverage": [null, 2]                       // Coverage information on each lines
         },
         //... other source information
-      ],
-      "git": {
-          "branch":"master",
-          "head" : {
-              "id":"50b111bc45ba9af702ea3230c8e44bd5e4060668",
-              "author_name": "toopay",
-              "author_email": "toopay@taufanaditya.com",
-              "message": "Commit message"
-          },
-          remotes: [{
+    ],
+    "git": {
+        "branch":"master",
+        "head" : {
+            "id":"50b111bc45ba9af702ea3230c8e44bd5e4060668",
+            "author_name": "toopay",
+            "author_email": "toopay@taufanaditya.com",
+            "message": "Commit message"
+        },
+        "remotes" : [{
             "name": "origin",
             "url": "git@github.com:php-loep/phpunit-coverage-listener.git",
             "fetch": "+refs/heads/*:refs/remotes/origin/*"
-          }]
-      }
+        }]
     }
+}
+```
 
 Then in the target server, you could accept the payload as follow (simplified) :
 
-    <?php
+```php
+<?php
 
-    $success = false;
+$success = false;
 
-    if (!empty($_FILES) && isset($_FILES['json_file'])) {
-      $target = __DIR__.'/coverage.json';
-      move_uploaded_file($_FILES['json_file']['tmp_name'], $target);
-      $success = 'Saved into http://'.$_SERVER['HTTP_HOST'].'/coverage.json';
-    }
+if (!empty($_FILES) && isset($_FILES['json_file'])) {
+    $target = __DIR__.'/coverage.json';
+    move_uploaded_file($_FILES['json_file']['tmp_name'], $target);
+    $success = 'Saved into http://'.$_SERVER['HTTP_HOST'].'/coverage.json';
+}
 
-    header('Content-Type: application/json');
-    die(json_encode(compact('success')));
+header('Content-Type: application/json');
+die(json_encode(compact('success')));
+```
 
 Above json data could be process furthermore to expose usefull information about your code-coverage information in a way that fit with your specific needs. [Coveralls](https://coveralls.io/) service would be a perfect example in this scenario.
 
@@ -60,47 +63,50 @@ Install
 
 Via Composer
 
-    {
-        "require": {
-            "league/phpunit-coverage-listener": "~1.1"
-        }
+```json
+{
+    "require": {
+        "league/phpunit-coverage-listener": "~1.1"
     }
-    
+}
+```
 
 Basic Usage
 -----------
 
 Let's say you want to send a payload data for [Coveralls](https://coveralls.io/) each time your [Travis](http://travis-ci.org/) job successfully build. All you need to do is adding bellow section within your phpunit configuration that used by `.travis.yml` (mostly you wont need this in your development environment) :
-	
-	<logging>
-        <log type="coverage-clover" target="/tmp/coverage.xml"/>
-    </logging>
-    <listeners>
-        <listener class="League\PHPUnitCoverageListener\Listener">
-            <arguments>
-                <array>
-                    <element key="printer">
-                      <object class="League\PHPUnitCoverageListener\Printer\StdOut"/>
-                    </element>
-                    <element key="hook">
-                      <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
-                    </element>
-                    <element key="namespace">
-                        <string>Your\Package\Namespace</string>
-                    </element>
-                    <element key="repo_token">
-                        <string>YourCoverallsRepoToken</string>
-                    </element>
-                    <element key="target_url">
-                        <string>https://coveralls.io/api/v1/jobs</string>
-                    </element>
-                    <element key="coverage_dir">
-                        <string>/tmp</string>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
+
+```xml
+<logging>
+    <log type="coverage-clover" target="/tmp/coverage.xml"/>
+</logging>
+<listeners>
+    <listener class="League\PHPUnitCoverageListener\Listener">
+        <arguments>
+            <array>
+                <element key="printer">
+                  <object class="League\PHPUnitCoverageListener\Printer\StdOut"/>
+                </element>
+                <element key="hook">
+                  <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
+                </element>
+                <element key="namespace">
+                    <string>Your\Package\Namespace</string>
+                </element>
+                <element key="repo_token">
+                    <string>YourCoverallsRepoToken</string>
+                </element>
+                <element key="target_url">
+                    <string>https://coveralls.io/api/v1/jobs</string>
+                </element>
+                <element key="coverage_dir">
+                    <string>/tmp</string>
+                </element>
+            </array>
+        </arguments>
+    </listener>
+</listeners>
+```
 
 And thats it.
 
@@ -129,22 +135,24 @@ This option contains `PrinterInterface` that will be used by Listener class in s
 
 This option allow you to hook into Listener life-cycle. `HookInterface` has two method to be implemented : `beforeCollect` and `afterCollect`. It will receive `Collection` data, and then will alter or do something with the data on each hook point. In the previous example, `Travis` hook actually only contains bellow code :
 
-    public function beforeCollect(Collection $data)
-    {
-        // Check for Travis-CI environment
-        // if it appears, then assign it respectively
-        if (getenv('TRAVIS_JOB_ID') || isset($_ENV['TRAVIS_JOB_ID'])) {
-            // Remove repo token
-            $data->remove('repo_token');
+```php
+public function beforeCollect(Collection $data)
+{
+    // Check for Travis-CI environment
+    // if it appears, then assign it respectively
+    if (getenv('TRAVIS_JOB_ID') || isset($_ENV['TRAVIS_JOB_ID'])) {
+        // Remove repo token
+        $data->remove('repo_token');
 
-            // And use travis config
-            $travis_job_id = isset($_ENV['TRAVIS_JOB_ID']) ? $_ENV['TRAVIS_JOB_ID'] : getenv('TRAVIS_JOB_ID');
-            $data->set('service_name', 'travis-ci');
-            $data->set('service_job_id', $travis_job_id);
-        }
-
-        return $data;
+        // And use travis config
+        $travis_job_id = isset($_ENV['TRAVIS_JOB_ID']) ? $_ENV['TRAVIS_JOB_ID'] : getenv('TRAVIS_JOB_ID');
+        $data->set('service_name', 'travis-ci');
+        $data->set('service_job_id', $travis_job_id);
     }
+
+    return $data;
+}
+```
 
 Currently there are `Travis` and `Circle` hooks. You could register your own hook class that suit for your need as long as it implements required interface.
 
@@ -168,9 +176,11 @@ The directory you specified here **must** be the same directory from which PHPUn
 
 As default, this library purpose is to collect and generate code-coverage data then send those payload data into remote location. But if you want to only collect and generate the data, add bellow option :
 
-    <element key="send">
-        <integer>0</integer>
-    </element>
+```xml
+<element key="send">
+    <integer>0</integer>
+</element>
+```
 
 within the listener arguments array directive.
 
