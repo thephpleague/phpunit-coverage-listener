@@ -1,6 +1,6 @@
 PHPUnit Coverage Listener
 =========================
-[![Build Status](https://travis-ci.org/php-loep/phpunit-coverage-listener.png)](https://travis-ci.org/php-loep/phpunit-coverage-listener) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/11688670)](http://depending.in/php-loep/phpunit-coverage-listener) [![Coverage Status](https://coveralls.io/repos/php-loep/phpunit-coverage-listener/badge.png?branch=master)](https://coveralls.io/r/php-loep/phpunit-coverage-listener?branch=master) [![Latest Stable Version](https://poser.pugx.org/league/phpunit-coverage-listener/v/stable.png)](https://packagist.org/packages/league/phpunit-coverage-listener) [![Total Downloads](https://poser.pugx.org/league/phpunit-coverage-listener/downloads.png)](https://packagist.org/packages/league/phpunit-coverage-listener)
+[![Build Status](https://travis-ci.org/thephpleague/phpunit-coverage-listener.png)](https://travis-ci.org/thephpleague/phpunit-coverage-listener) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/11688670)](http://depending.in/thephpleague/phpunit-coverage-listener) [![Coverage Status](https://coveralls.io/repos/thephpleague/phpunit-coverage-listener/badge.png?branch=master)](https://coveralls.io/r/thephpleague/phpunit-coverage-listener?branch=master) [![Latest Stable Version](https://poser.pugx.org/league/phpunit-coverage-listener/v/stable.png)](https://packagist.org/packages/league/phpunit-coverage-listener) [![Total Downloads](https://poser.pugx.org/league/phpunit-coverage-listener/downloads.png)](https://packagist.org/packages/league/phpunit-coverage-listener)
 
 PHPUnit Coverage Listener is a utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL.
 
@@ -187,20 +187,20 @@ within the listener arguments array directive.
 Changelog
 ---------
 
-[See the changelog file](https://github.com/php-loep/phpunit-coverage-listener/blob/master/CHANGELOG.md)
+[See the changelog file](https://github.com/thephpleague/phpunit-coverage-listener/blob/master/CHANGELOG.md)
 
 Contributing
 ------------
 
-Please see [CONTRIBUTING](https://github.com/php-loep/phpunit-coverage-listener/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/thephpleague/phpunit-coverage-listener/blob/master/CONTRIBUTING.md) for details.
 
 Support
 -------
 
-Bugs and feature request are tracked on [GitHub](https://github.com/php-loep/phpunit-coverage-listener/issues)
+Bugs and feature request are tracked on [GitHub](https://github.com/thephpleague/phpunit-coverage-listener/issues)
 
 License
 -------
 
 PHPUnit Coverage Listener is released under the MIT License. See the bundled
-[LICENSE](https://github.com/php-loep/phpunit-coverage-listener/blob/master/LICENSE) file for details.
+[LICENSE](https://github.com/thephpleague/phpunit-coverage-listener/blob/master/LICENSE) file for details.
