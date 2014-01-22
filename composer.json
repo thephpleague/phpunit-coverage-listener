@@ -2,7 +2,6 @@
     "name": "league/phpunit-coverage-listener",
     "description": "Utility library that allow you to process the PHPUnit code-coverage information and send it into some remote location via cURL",
     "keywords": ["coveralls", "phpunit", "coverage"],
-    "homepage": "https://github.com/php-loep/phpunit-coverage-listener",
     "license": "MIT",
     "authors": [
         {
