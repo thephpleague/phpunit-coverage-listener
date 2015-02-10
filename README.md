@@ -63,12 +63,8 @@ Install
 
 Via Composer
 
-```json
-{
-    "require": {
-        "league/phpunit-coverage-listener": "~1.1"
-    }
-}
+```bash
+composer require league/phpunit-coverage-listener
 ```
 
 Basic Usage
